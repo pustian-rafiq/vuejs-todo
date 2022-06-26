@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Item;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ItemController extends Controller
@@ -14,7 +16,12 @@ class ItemController extends Controller
      */
     public function index()
     {
-        //
+        $items = Item::latest()->get();
+
+        return response()->json([
+            "success" => true,
+            "data" => $items
+        ]);
     }
 
     /**
@@ -35,7 +42,17 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = new Item();
+
+        $data->name =$request->name;
+
+        $data->save();
+
+        return response()->json([
+            "success" => true,
+            "message" => "Item added successfully",
+            "data" => $data
+        ]);
     }
 
     /**
@@ -69,7 +86,24 @@ class ItemController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = Item::find($id);
+
+        if($data){
+            $data->completed = $request->completed ? true : false;
+            $data->completed_at = $request->compeleted ? Carbon::now() : null;
+            $data->save();
+
+            return response()->json([
+                "success" => true,
+                "message" => "Item updated successfully",
+                "data" => $data
+            ]);
+        }else{
+            return response()->json([
+                "success" => false,
+                "message" => "Item not found"
+            ]);
+        }
     }
 
     /**
@@ -80,6 +114,19 @@ class ItemController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $data = Item::find($id);
+
+        if($data){
+            $data->delete();
+            return response()->json([
+                "success" => true,
+                "message" => "Item  deleted successfully"
+            ]);
+        }else{
+            return response()->json([
+                "success" => false,
+                "message" => "Item not found"
+            ]);
+        }
     }
 }
