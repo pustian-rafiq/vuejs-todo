@@ -15,4 +15,11 @@ app.component('app', App)
 app.component('font-awesome-icon', FontAwesomeIcon)
 
 app.mount('#app')
-app
+
+//Another way to import vue js
+
+// createApp({
+//     components: {
+//       QuestionsComponent,
+//     },
+//   }).mount("#app");
